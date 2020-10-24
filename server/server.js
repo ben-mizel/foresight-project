@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const md5 = require('md5');
 const db = require('../database/database.js');
 
 const app = express();
@@ -8,24 +7,14 @@ const port = 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
-});
-app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`,
-  );
-});
-
 // Root endpoint
 app.get("/", (req, res, next) => {
   res.json({"message":"Ok"})
 });
 
-app.get("/api/users", (req, res, next) => {
-  var sql = "select * from user"
-  var params = []
+app.get("/api/patients", (req, res, next) => {
+  const sql = "select * from patients"
+  const params = []
   db.all(sql, params, (err, rows) => {
       if (err) {
         res.status(400).json({"error":err.message});
@@ -38,41 +27,88 @@ app.get("/api/users", (req, res, next) => {
     });
 });
 
-app.get("/api/user/:id", (req, res, next) => {
-  var sql = "select * from user where id = ?"
-  var params = [req.params.id]
-  db.get(sql, params, (err, row) => {
-      if (err) {
-        res.status(400).json({"error":err.message});
-        return;
-      }
-      res.json({
-          "message":"success",
-          "data":row
-      })
-    });
-});
-
-app.post("/api/user/", (req, res, next) => {
-  var errors=[]
-  if (!req.body.password){
-      errors.push("No password specified");
+app.post("/api/patients/", (req, res, next) => {
+  const errors=[];
+  if (!req.body.firstName){
+      errors.push("No first name specified");
   }
-  if (!req.body.email){
-      errors.push("No email specified");
+  if (!req.body.lastName){
+    errors.push("No last name specified");
+}
+  if (!req.body.dob){
+      errors.push("No date of birth specified");
+  }
+  if (!req.body.phone){
+      errors.push("No phone number specified");
   }
   if (errors.length){
       console.log('ERRORS!!!!!')
       res.status(400).json({"error":errors.join(",")});
       return;
   }
-  var data = {
-      name: req.body.name,
-      email: req.body.email,
-      password : md5(req.body.password)
+  const data = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      dob: req.body.dob,
+      phone : req.body.phone
   }
-  var sql ='INSERT INTO user (name, email, password) VALUES (?,?,?)'
-  var params =[data.name, data.email, data.password]
+  const sql ='INSERT INTO patients (name, dob, phone) VALUES (?,?,?)'
+  const params =[data.name, data.dob, data.phone]
+  db.run(sql, params, function (err, result) {
+      if (err){
+          res.status(400).json({"error": err.message})
+          return;
+      }
+      res.json({
+          "message": "success",
+          "data": data,
+          "id" : this.lastID
+      })
+  });
+});
+
+app.get("/api/appointments/", (req, res, next) => {
+  const sql = "select * from appointments"
+  const params = []
+  db.all(sql, params, (err, rows) => {
+      if (err) {
+        res.status(400).json({"error":err.message});
+        return;
+      }
+      res.json({
+          "message":"success",
+          "data":rows
+      })
+    });
+});
+
+app.post("/api/appointments/:name", (req, res, next) => {
+  const errors=[];
+  if (!req.params.name){
+      errors.push("No name specified");
+  }
+  if (!req.body.date){
+    errors.push("No date specified");
+}
+  if (!req.body.time){
+      errors.push("No time specified");
+  }
+  if (!req.body.type){
+      errors.push("No type specified");
+  }
+  if (errors.length){
+      console.log('ERRORS!!!!!')
+      res.status(400).json({"error":errors.join(",")});
+      return;
+  }
+  const data = {
+      name: req.params.name,
+      date: req.body.date,
+      time: req.body.time,
+      type : req.body.type
+  }
+  const sql = "INSERT INTO appointments (name, date, time, type) VALUES (?,?,?,?)"
+  const params = [data.name, data.date, data.time, data.type];
   db.run(sql, params, function (err, result) {
       if (err){
           res.status(400).json({"error": err.message})

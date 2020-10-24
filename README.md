@@ -37,6 +37,8 @@ Add server routes for required CRUD functionality and test with Postman
 -GET appointments/:name: When I click a patient, get all of their appointments ordered by start date/time descending, store in state, and display them
 -POST appointments/:name When I create an appointment, add it to the database, and respond with the added appointment to put at the proper index in the patient component's state
 
+Modularize with controllers
+
 Create stateful and presentational React components to store and display user and application data
 
 Add tests and documentation
@@ -44,3 +46,5 @@ Add tests and documentation
 Create production build
 
 Add search feature
+
+Install eslint globally again
