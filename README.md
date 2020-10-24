@@ -24,3 +24,9 @@ Update project/package.json with the following scripts:
   "client": "cd client && npm start",
   "server": "nodemon server/server.js",
   "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+
+Create a SQLite3 database in database/database.js and export it as a module
+
+Add server routes for required CRUD functionality and test with Postman
+
+Create stateful and presentational React components to store and display user and application data
