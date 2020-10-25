@@ -28,16 +28,8 @@ Update project/package.json with the following scripts:
 Create a SQLite3 database in database/database.js and export it as a module
 
 Create and populate the database tables
--patients
--appointments
 
-Add server routes for required CRUD functionality and test with Postman
--GET patients: When the app loads, get all the patients alphabetically by last name, store in state, and display them
--POST patients: When I create a patient, add it to the database, and respond with the added row to put at the top of the list in state
--GET appointments/:name: When I click a patient, get all of their appointments ordered by start date/time descending, store in state, and display them
--POST appointments/:name When I create an appointment, add it to the database, and respond with the added appointment to put at the proper index in the patient component's state
-
-Modularize with controllers
+Add server routes and controllers for required CRUD functionality and test with Postman
 
 Create stateful and presentational React components to store and display user and application data
 
