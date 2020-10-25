@@ -16,56 +16,42 @@ function readCSVToRows(file) {
 }
 
 const DBSOURCE = '';
+const db = new sqlite3.Database(DBSOURCE);
 
-const db = new sqlite3.Database(DBSOURCE, (err) => {
-    if (err) {
-      // Cannot open database
-      console.error(err.message);
-      throw err;
-    } else {
-        console.log('Connected to the SQLite database.')
-        db.run(`CREATE TABLE patients (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            firstName TEXT, 
-            lastName TEXT,
-            dob TEXT,
-            phone TEXT
-            )`,
-        (err) => {
-            if (err) {
-                // Table already created
-            } else {
-                // Table just created, creating some rows
-                const insert = 'INSERT INTO patients (firstName, lastName, dob, phone) VALUES (?,?,?,?)';
-                readCSVToRows('database/patients.csv').then((patientRows) => {
-                  for (let i = 1; i < patientRows.length - 1; i++) {
-                    db.run(insert, patientRows[i]);
-                  }
-                });
-            }
-        });
-        db.run(`CREATE TABLE appointments (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          patientName TEXT, 
-          startDate TEXT,
-          startTime TEXT,
-          appointmentType TEXT
-          )`,
-      (err) => {
-          if (err) {
-              // Table already created
-          } else {
-              // Table just created, creating some rows
-              const insert = 'INSERT INTO appointments (patientName, startDate, startTime, appointmentType) VALUES (?,?,?,?)';
-              readCSVToRows('database/appointments.csv').then((appointmentRows) => {
-                for (let i = 1; i < appointmentRows.length - 1; i++) {
-                  db.run(insert, appointmentRows[i]);
-                }
-              });
-          }
-      });
-        
+db.serialize(function() {
+  db.run(`CREATE TABLE patients (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      firstName TEXT, 
+      lastName TEXT,
+      dob TEXT,
+      phone TEXT
+      )`);
+
+  const stmt = db.prepare('INSERT INTO patients (firstName, lastName, dob, phone) VALUES (?,?,?,?)');
+  readCSVToRows('database/patients.csv').then((patientRows) => {
+    for (let i = 1; i < patientRows.length - 1; i++) {
+      stmt.run(...patientRows[i]);
     }
+    stmt.finalize();
+  });
+});
+
+db.serialize(function() {
+  db.run(`CREATE TABLE appointments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    patientName TEXT, 
+    startDate TEXT,
+    startTime TEXT,
+    appointmentType TEXT
+    )`);
+
+  const stmt = db.prepare('INSERT INTO appointments (patientName, startDate, startTime, appointmentType) VALUES (?,?,?,?)');
+  readCSVToRows('database/appointments.csv').then((appointmentRows) => {
+    for (let i = 1; i < appointmentRows.length - 1; i++) {
+      stmt.run(...appointmentRows[i]);
+    }
+    stmt.finalize();
+  });
 });
 
 module.exports = db;
