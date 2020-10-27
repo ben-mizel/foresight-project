@@ -44,7 +44,7 @@ class Container extends Component {
   }
 
   submitNewPatient(event) {
-    fetch('http://localhost:3000/api/patients', {
+    fetch('/api/patients', {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'
@@ -69,7 +69,7 @@ class Container extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/api/patients')
+    fetch('/api/patients')
       .then(res => res.json())
       .then(data => this.setState({ patients: data }))
       .catch(err => console.log(err))

@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const patientController = require('./patientController');
@@ -7,6 +8,8 @@ const app = express();
 const port = 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static(path.resolve(__dirname, '../client/build')));
 
 app.get("/api/patients", patientController.getPatients, (req, res) => {
   res.status(200).json(res.locals.patients);

@@ -18,7 +18,7 @@ function AppointmentList(props) {
   const [ appointment, setAppointment ] = useState({appointmentType: 'Initial Visit'});
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/appointments/${props.patientName}`)
+    fetch(`/api/appointments/${props.patientName}`)
       .then(res => res.json())
       .then(data => {
         setAppointments(data);
@@ -36,7 +36,7 @@ function AppointmentList(props) {
   }
 
   function submitNewAppointment(event) {
-    fetch(`http://localhost:3000/api/appointments/${props.patientName}`, {
+    fetch(`/api/appointments/${props.patientName}`, {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'
