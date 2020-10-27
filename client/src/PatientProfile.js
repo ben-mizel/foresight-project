@@ -9,11 +9,7 @@ function PatientProfile(props) {
       </div>
     );
   }
-  return (
-    <div>
-      <h1>Patient Profile</h1>
-    </div>
-  );
+  return null;
 }
 
 export default PatientProfile;
