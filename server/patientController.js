@@ -3,7 +3,7 @@ const db = require('../database/database');
 module.exports = {
 
   getPatients(req, res, next) {
-    const sql = "SELECT * FROM patients ORDER BY lastName ASC";
+    const sql = "SELECT * FROM patients ORDER BY lastName, firstName ASC";
     const params = [];
     db.all(sql, params, (err, rows) => {
       if (err) {

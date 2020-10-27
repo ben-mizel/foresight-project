@@ -1,16 +1,17 @@
+import PatientCard from './PatientCard'
+
 function PatientList(props) {
-  const patientNames = [];
+  const patients = [];
   for (let i = 0; i < props.patients.length; i += 1) {
     const currPatient = props.patients[i];
-    const { firstName, lastName } = currPatient;
+    const { firstName, lastName, id } = currPatient;
     const fullName = `${firstName} ${lastName}`;
-    const displayName = `${lastName}, ${firstName}`
-    patientNames.push(<p key={'Key: ' + fullName} id={fullName}>{displayName}</p>);
+    patients.push(<PatientCard key={'Key: ' + id} id={fullName} patient={currPatient} selectPatient={props.selectPatient}/>)
   }
   return (
     <div>
       <h1>Patient List</h1>
-      { patientNames }
+      { patients }
     </div>
   );
 }

@@ -22,7 +22,50 @@ class Container extends Component {
     super(props);
     this.state = {
       patients: [],
+      newPatient: {
+        firstName: '',
+        lastName: '',
+        dob: '',
+        phone: '',
+      },
+      patientSelected: {},
     };
+
+    this.updateNewPatient = this.updateNewPatient.bind(this);
+    this.submitNewPatient = this.submitNewPatient.bind(this);
+    this.selectPatient = this.selectPatient.bind(this);
+  }
+
+  updateNewPatient(event) {
+    const newPatientData = {};
+    newPatientData[event.target.id] = event.target.value;
+    const updatedPatient = Object.assign({}, this.state.newPatient, newPatientData);
+    this.setState({newPatient: updatedPatient});
+  }
+
+  submitNewPatient(event) {
+    fetch('http://localhost:3000/api/patients', {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.newPatient),
+    })
+    .then(res => res.json())
+    .then(data => {
+      const addedPatient = data[0];
+      const copyOfPatients = JSON.parse(JSON.stringify(this.state.patients));
+      copyOfPatients.unshift(addedPatient);
+      this.setState({patients: copyOfPatients});
+    })
+    .catch(err => console.log(err))
+    event.target.reset();
+    event.preventDefault();
+  }
+
+  selectPatient(event, clickedPatient) {
+    this.setState({patientSelected: clickedPatient});
+    event.preventDefault();
   }
 
   componentDidMount() {
@@ -35,9 +78,9 @@ class Container extends Component {
   render() {
     return (
       <Rect>
-        <Column><CreatePatient/></Column>
-        <Column><PatientList patients={this.state.patients}/></Column>
-        <Column><PatientProfile/></Column>
+        <Column><CreatePatient updateNewPatient={this.updateNewPatient} submitNewPatient={this.submitNewPatient}/></Column>
+        <Column><PatientList patients={this.state.patients} selectPatient={this.selectPatient}/></Column>
+        <Column><PatientProfile patientData={this.state.patientSelected}/></Column>
       </Rect>
     );
   }
