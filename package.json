@@ -6,10 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd client && npm start",
-    "install-client-npm": "cd client && npm install",
     "server": "nodemon server/server.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "start": "concurrently \"npm run install-client-npm\" \"node server/server.js\" \"open http://localhost:5000\""
+    "start": "concurrently \"node server/server.js\" \"open http://localhost:5000\""
   },
   "repository": {
     "type": "git",
