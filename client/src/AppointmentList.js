@@ -68,9 +68,7 @@ function AppointmentList(props) {
 
   return (
     <div>
-      <hr/>
       <CreateAppointment updateNewAppointment={updateNewAppointment} submitNewAppointment={submitNewAppointment}/>
-      <hr/>
       { appointmentItems }
     </div>
   );
