@@ -15,11 +15,11 @@ function readCSVToRows(file) {
   });
 }
 
-const DBSOURCE = 'foresight';
+const DBSOURCE = 'foresight.sqlite';
 const db = new sqlite3.Database(DBSOURCE);
 
 db.serialize(function() {
-  db.run(`CREATE TABLE patients (
+  db.run(`CREATE TABLE IF NOT EXISTS patients (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       firstName TEXT, 
       lastName TEXT,
@@ -37,7 +37,7 @@ db.serialize(function() {
 });
 
 db.serialize(function() {
-  db.run(`CREATE TABLE appointments (
+  db.run(`CREATE TABLE IF NOT EXISTS appointments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     patientName TEXT, 
     startDate TEXT,
