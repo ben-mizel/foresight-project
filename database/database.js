@@ -15,7 +15,7 @@ function readCSVToRows(file) {
   });
 }
 
-const DBSOURCE = '';
+const DBSOURCE = 'foresight';
 const db = new sqlite3.Database(DBSOURCE);
 
 db.serialize(function() {
