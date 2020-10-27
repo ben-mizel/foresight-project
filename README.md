@@ -7,4 +7,4 @@
   4. `cd client`
   5. `npm install`	
   6. `cd ..`	
-  7. `npm start`
+  7. `npm run dev`
